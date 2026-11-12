@@ -2,9 +2,11 @@
 
 Small FastAPI app: a community-event leaderboard. In-memory store, no database.
 
-## Commands
-- Test: the TEST_CMD in factory.conf (must pass before any PR)
-- Lint: the LINT_CMD in factory.conf
+## Commands (copy them exactly)
+- Test: `pytest -q -p no:cacheprovider` (the TEST_CMD in factory.conf; must pass before any PR).
+- Lint: `ruff check --no-cache app tests` (the LINT_CMD in factory.conf).
+- `pytest` and `ruff` are already on PATH. Never prefix them: no `venv/bin/`, no `python -m`,
+  no `cd`, no env vars, no pipes or `&&`. Any other spelling is blocked by the factory.
 
 ## Conventions
 - Python 3.10+, FastAPI, type hints everywhere.
@@ -39,3 +41,5 @@ Small FastAPI app: a community-event leaderboard. In-memory store, no database.
 - Phase state lives in `.factory/` as markdown files. Never put plan or review text in code comments.
 - Only the paths in SCOPE (factory.conf) may change. Do not touch factory.sh, lib/, gates/, .claude/ or this file.
 - Security: no eval/exec, no shell calls from endpoints, validate all inputs with pydantic.
+- Security findings are about the diff (`git diff main`). Files the change did not touch,
+  such as factory.conf, are out of scope for the review.
