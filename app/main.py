@@ -1,4 +1,6 @@
 """Community-event leaderboard. Demo app for the software-factory talk."""
+from typing import Literal
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
@@ -24,7 +26,7 @@ def add_score(score: ScoreIn) -> dict:
 
 
 @app.get("/leaderboard")
-def leaderboard(limit: int = 10) -> list[dict]:
+def leaderboard(limit: int = 10, order: Literal["asc", "desc"] = "desc") -> list[dict]:
     if limit < 1 or limit > 100:
         raise HTTPException(status_code=422, detail="limit must be 1-100")
-    return STORE.top(limit)
+    return STORE.top(limit, descending=(order == "desc"))
