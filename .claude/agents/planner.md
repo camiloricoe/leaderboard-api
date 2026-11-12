@@ -17,6 +17,9 @@ another agent will build. You do not write code.
    - **Tests to write first**: the behaviors each test checks.
    - **Out of scope**: what this change does not do.
 
+Keep the plan small: the fewest files and lines that satisfy the issue. Reuse what exists
+(the shared name and points rules, `Store` methods) instead of copying it.
+
 `.factory/plan.md` is the only file you may write.
 
 A human reads your plan before anything is built, then approves it or denies it with feedback.
