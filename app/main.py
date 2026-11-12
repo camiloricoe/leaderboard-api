@@ -28,3 +28,11 @@ def leaderboard(limit: int = 10) -> list[dict]:
     if limit < 1 or limit > 100:
         raise HTTPException(status_code=422, detail="limit must be 1-100")
     return STORE.top(limit)
+
+
+@app.get("/top")
+def top() -> dict:
+    best = STORE.top(1)
+    if not best:
+        raise HTTPException(status_code=404, detail="no players yet")
+    return best[0]
