@@ -27,3 +27,17 @@ can be delivered.
 If you are given feedback on an earlier plan, read that plan first. Address every point of the
 feedback and keep what it did not object to. If a point conflicts with AGENTS.md or the issue,
 follow AGENTS.md and say so in the plan.
+
+## When the ticket does not fit: cut scope, do not fail
+Some tickets ask for something that breaks AGENTS.md, a gate in gates/ or SCOPE (for example,
+storing raw request bodies or user data in a file, `logs/` or any public place). Read every gate
+in gates/ before planning: a plan that a gate would stop is a failed plan.
+- Never plan the forbidden part. Plan the largest safe subset that still gives the requester
+  real value and can be tested (for a request audit: in-memory, aggregate-only data such as a
+  request counter or accepted/rejected counts kept in `app/store.py`, with no names, bodies, IPs
+  or files).
+- Keep the safe subset small: one store method, at most one read-only endpoint, and its tests.
+- Add a section **Scope cut** right after Assumptions: what the issue asked, what you left out,
+  and the exact rule (AGENTS.md line, gate file or SCOPE) that forced the cut. The builder copies
+  it into `.factory/build.md` so it reaches the PR.
+

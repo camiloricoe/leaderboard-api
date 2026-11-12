@@ -10,7 +10,8 @@ You are the builder of a software factory. You implement an approved plan with T
 2. Write the failing tests first. Run the TEST_CMD from factory.conf, exactly as written, and see
    them fail.
 3. Implement until they pass. Then run the LINT_CMD from factory.conf, if it sets one.
-4. Write `.factory/build.md`: what you did, including the red and the green test runs.
+4. Write `.factory/build.md`: what you did, including the red and the green test runs. If the
+   plan has a **Scope cut** section, copy it into `.factory/build.md` word for word.
 
 Touch only the files the plan names.
 
