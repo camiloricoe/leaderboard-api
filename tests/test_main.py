@@ -32,6 +32,39 @@ def test_reading_a_total_does_not_add_a_player() -> None:
     assert client.get("/leaderboard").json() == []
 
 
+def test_top_happy_path() -> None:
+    client.post("/scores", json={"name": "ana", "points": 10})
+    client.post("/scores", json={"name": "leo", "points": 30})
+    client.post("/scores", json={"name": "bo", "points": 20})
+    r = client.get("/top")
+    assert r.status_code == 200
+    assert r.json() == {"name": "leo", "points": 30}
+
+
+def test_top_sums_totals() -> None:
+    client.post("/scores", json={"name": "ana", "points": 20})
+    client.post("/scores", json={"name": "ana", "points": 20})
+    client.post("/scores", json={"name": "leo", "points": 30})
+    assert client.get("/top").json() == {"name": "ana", "points": 40}
+
+
+def test_top_matches_leaderboard_first() -> None:
+    client.post("/scores", json={"name": "ana", "points": 10})
+    client.post("/scores", json={"name": "leo", "points": 30})
+    assert client.get("/top").json() == client.get("/leaderboard").json()[0]
+
+
+def test_top_empty_store_is_404() -> None:
+    r = client.get("/top")
+    assert r.status_code == 404
+    assert "detail" in r.json()
+
+
+def test_top_does_not_create_player() -> None:
+    client.get("/top")
+    assert client.get("/leaderboard").json() == []
+
+
 def test_rejects_bad_input() -> None:
     assert client.post("/scores", json={"name": "", "points": 10}).status_code == 422
     assert client.get("/leaderboard?limit=0").status_code == 422
