@@ -9,6 +9,13 @@ class Store:
     def add(self, name: str, points: int) -> None:
         self._scores[name] += points
 
+    def add_many(self, entries: list[tuple[str, int]]) -> list[int]:
+        totals: list[int] = []
+        for name, points in entries:
+            self.add(name, points)
+            totals.append(self.total(name))
+        return totals
+
     def total(self, name: str) -> int:
         return self._scores.get(name, 0)  # reading must not create a 0-point player
 
