@@ -16,6 +16,12 @@ class Store:
         ranked = sorted(self._scores.items(), key=lambda kv: kv[1], reverse=True)
         return [{"name": n, "points": p} for n, p in ranked[:limit]]
 
+    def rank(self, name: str) -> int | None:
+        if name not in self._scores:
+            return None
+        mine = self._scores[name]
+        return 1 + sum(1 for p in self._scores.values() if p > mine)
+
     def reset(self) -> None:
         self._scores.clear()
 
