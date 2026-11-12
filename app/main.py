@@ -1,8 +1,10 @@
 """Community-event leaderboard. Demo app for the software-factory talk."""
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.store import STORE
+
+MAX_MIN_POINTS = 100000
 
 app = FastAPI(title="Leaderboard")
 
@@ -24,7 +26,10 @@ def add_score(score: ScoreIn) -> dict:
 
 
 @app.get("/leaderboard")
-def leaderboard(limit: int = 10) -> list[dict]:
+def leaderboard(
+    limit: int = 10,
+    min_points: int = Query(0, ge=0, le=MAX_MIN_POINTS),
+) -> list[dict]:
     if limit < 1 or limit > 100:
         raise HTTPException(status_code=422, detail="limit must be 1-100")
-    return STORE.top(limit)
+    return STORE.top(limit, min_points)
