@@ -16,6 +16,9 @@ class Store:
         ranked = sorted(self._scores.items(), key=lambda kv: kv[1], reverse=True)
         return [{"name": n, "points": p} for n, p in ranked[:limit]]
 
+    def names(self) -> list[str]:
+        return sorted(self._scores)
+
     def reset(self) -> None:
         self._scores.clear()
 
