@@ -1,4 +1,6 @@
 """Community-event leaderboard. Demo app for the software-factory talk."""
+from typing import Annotated
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
@@ -6,10 +8,26 @@ from app.store import STORE
 
 app = FastAPI(title="Leaderboard")
 
+Name = Annotated[str, Field(min_length=1, max_length=40)]
+
 
 class ScoreIn(BaseModel):
-    name: str = Field(min_length=1, max_length=40)
+    name: Name
     points: int = Field(ge=0, le=1000)
+
+
+class RenameIn(BaseModel):
+    new_name: Name
+
+
+@app.patch("/players/{name}")
+def rename_player(name: Name, body: RenameIn) -> dict:
+    if not STORE.has(name):
+        raise HTTPException(status_code=404, detail="player not found")
+    if STORE.has(body.new_name):
+        raise HTTPException(status_code=409, detail="name already taken")
+    STORE.rename(name, body.new_name)
+    return {"name": body.new_name, "total": STORE.total(body.new_name)}
 
 
 @app.get("/health")
