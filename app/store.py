@@ -5,6 +5,7 @@ from collections import defaultdict
 class Store:
     def __init__(self) -> None:
         self._scores: dict[str, int] = defaultdict(int)
+        self._accepted: int = 0
 
     def add(self, name: str, points: int) -> None:
         self._scores[name] += points
@@ -16,8 +17,15 @@ class Store:
         ranked = sorted(self._scores.items(), key=lambda kv: kv[1], reverse=True)
         return [{"name": n, "points": p} for n, p in ranked[:limit]]
 
+    def record_accepted(self) -> None:
+        self._accepted += 1
+
+    def audit(self) -> dict:
+        return {"accepted": self._accepted}
+
     def reset(self) -> None:
         self._scores.clear()
+        self._accepted = 0
 
 
 STORE = Store()

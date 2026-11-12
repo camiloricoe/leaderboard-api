@@ -20,7 +20,13 @@ def health() -> dict:
 @app.post("/scores")
 def add_score(score: ScoreIn) -> dict:
     STORE.add(score.name, score.points)
+    STORE.record_accepted()
     return {"name": score.name, "total": STORE.total(score.name)}
+
+
+@app.get("/audit")
+def audit() -> dict:
+    return STORE.audit()
 
 
 @app.get("/leaderboard")
